@@ -22,7 +22,7 @@ public class PatientService {
     }
 
     public void putPatient(Patient patient) {
-        Patient patientTemp = patient;
+        Patient patientTemp = findById(patient.getId());
         if (patient.getName() != null){
             patientTemp.setName(patient.getName());
         }

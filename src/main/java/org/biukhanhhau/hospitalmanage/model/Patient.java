@@ -1,6 +1,7 @@
 package org.biukhanhhau.hospitalmanage.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class Patient {
     @JoinTable(name = "nurse_patient",
             joinColumns = @JoinColumn(name = "p_id"),
             inverseJoinColumns = @JoinColumn(name = "n_id"))
+    @JsonIgnore
     private List<Nurse> nurses;
 
     public String getAge() {

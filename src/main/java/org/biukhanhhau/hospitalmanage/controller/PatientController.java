@@ -1,6 +1,7 @@
 package org.biukhanhhau.hospitalmanage.controller;
 
-import jakarta.servlet.ServletRequest;
+import org.apache.coyote.Response;
+import org.biukhanhhau.hospitalmanage.dto.PatientDTO;
 import org.biukhanhhau.hospitalmanage.model.Patient;
 import org.biukhanhhau.hospitalmanage.service.PatientService;
 import org.springframework.http.ResponseEntity;
@@ -30,18 +31,18 @@ public class PatientController {
     }
 
     @PostMapping("patients")
-    public ResponseEntity<Patient> postPatient(@RequestBody Patient patient){
-        patientService.addPatient(patient);
-        return ResponseEntity.ok(patient);
+    public ResponseEntity<Patient> postPatient(@RequestBody PatientDTO dto){
+        Patient newP = patientService.addPatient(dto);
+        return ResponseEntity.ok(newP);
     }
 
     @PutMapping("patients/{id}")
-    public ResponseEntity<Patient> putPatient(@PathVariable int id, @RequestBody Patient patient, ServletRequest servletRequest){
-        if (patientService.findById(id) == null){
+    public ResponseEntity<Patient> putPatient(@PathVariable int id, @RequestBody PatientDTO dto) {
+        Patient tempP = patientService.putPatient(id, dto);
+        if (tempP == null){
             return ResponseEntity.notFound().build();
         }
-        patientService.putPatient(patient);
-        return ResponseEntity.ok(patient);
+        return ResponseEntity.ok(tempP);
     }
 
     @DeleteMapping("patients/{id}")

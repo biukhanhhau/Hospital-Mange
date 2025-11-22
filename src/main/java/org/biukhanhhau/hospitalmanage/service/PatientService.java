@@ -1,6 +1,9 @@
 package org.biukhanhhau.hospitalmanage.service;
 
+import org.biukhanhhau.hospitalmanage.dto.PatientDTO;
+import org.biukhanhhau.hospitalmanage.model.Nurse;
 import org.biukhanhhau.hospitalmanage.model.Patient;
+import org.biukhanhhau.hospitalmanage.repo.NurseRepo;
 import org.biukhanhhau.hospitalmanage.repo.PatientRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,9 @@ public class PatientService {
     @Autowired
     PatientRepo patientRepo;
 
+    @Autowired
+    NurseRepo nurseRepo;
+
     public List<Patient> findPatients(){
         return patientRepo.findAll();
     }
@@ -21,28 +27,29 @@ public class PatientService {
         return patientRepo.findById(id);
     }
 
-    public void putPatient(Patient patient) {
-        Patient patientTemp = findById(patient.getId());
-        if (patient.getName() != null){
-            patientTemp.setName(patient.getName());
+    public Patient putPatient(int id, PatientDTO dto) {
+        Patient existingPatient = patientRepo.findById(id);
+        if (existingPatient == null){
+            return null;
         }
+        existingPatient.setName(dto.getName());
+        existingPatient.setAge(dto.getAge());
+        existingPatient.setProblem(dto.getProblem());
 
-        if (patient.getAge() != null){
-            patientTemp.setAge(patient.getAge());
-        }
-
-        if (patient.getNurses() != null){
-            patientTemp.setNurses(patient.getNurses());
-        }
-
-        if (patient.getProblem() != null){
-            patientTemp.setProblem(patient.getProblem());
-        }
-        patientRepo.save(patientTemp);
+        List<Nurse> newNurse = nurseRepo.findAllById(dto.getNurses());
+        existingPatient.setNurses(newNurse);
+        return patientRepo.save(existingPatient);
     }
 
-    public void addPatient(Patient patient) {
-        patientRepo.save(patient);
+    public Patient addPatient(PatientDTO dto) {
+        Patient patient = new Patient();
+        patient.setName(dto.getName());
+        patient.setAge(dto.getAge());
+        patient.setProblem(dto.getProblem());
+        if (dto.getNurses()==null &&dto.getNurses().isEmpty()){
+            patient.setNurses(nurseRepo.findAllById(dto.getNurses()));
+        }
+        return patientRepo.save(patient);
     }
 
     public void delPatient(int id) {

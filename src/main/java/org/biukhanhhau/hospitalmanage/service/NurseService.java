@@ -1,7 +1,9 @@
 package org.biukhanhhau.hospitalmanage.service;
 
 import org.biukhanhhau.hospitalmanage.model.Nurse;
+import org.biukhanhhau.hospitalmanage.model.Patient;
 import org.biukhanhhau.hospitalmanage.repo.NurseRepo;
+import org.biukhanhhau.hospitalmanage.repo.PatientRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,8 @@ public class NurseService {
 
     @Autowired
     NurseRepo nurseRepo;
+    @Autowired
+    private PatientRepo patientRepo;
 
     public Nurse addNurse(Nurse nurse) {
         return nurseRepo.save(nurse);
@@ -39,7 +43,14 @@ public class NurseService {
     }
 
     public void delNurse(int id) {
-        nurseRepo.deleteById(id);
+        Nurse nurse = nurseRepo.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
+
+        List<Patient> patients = nurse.getPatients();
+        for(Patient p : patients){
+            p.getNurses().remove(nurse);
+            patientRepo.save(p);
+        }
+        nurseRepo.delete(nurse);
     }
 
     public List<Nurse> findNurses() {

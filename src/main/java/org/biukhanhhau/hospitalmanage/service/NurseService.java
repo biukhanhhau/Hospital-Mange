@@ -1,9 +1,7 @@
 package org.biukhanhhau.hospitalmanage.service;
 
-import org.aspectj.weaver.WildcardedUnresolvedType;
 import org.biukhanhhau.hospitalmanage.model.Nurse;
 import org.biukhanhhau.hospitalmanage.repo.NurseRepo;
-import org.hibernate.NonUniqueResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +39,7 @@ public class NurseService {
     }
 
     public void delNurse(int id) {
-        nurseRepo.deleteById(id);;
+        nurseRepo.deleteById(id);
     }
 
     public List<Nurse> findNurses() {

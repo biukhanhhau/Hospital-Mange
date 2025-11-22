@@ -22,7 +22,7 @@ public class NurseService {
     }
 
     public Nurse findNurse(int id){
-        return nurseRepo.findNurseById(id);
+        return nurseRepo.findById(id);
     }
 
     public void putNurse(Nurse nurse){
@@ -43,7 +43,7 @@ public class NurseService {
     }
 
     public void delNurse(int id) {
-        Nurse nurse = nurseRepo.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
+        Nurse nurse = nurseRepo.findById(id);
 
         List<Patient> patients = nurse.getPatients();
         for(Patient p : patients){
